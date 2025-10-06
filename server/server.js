@@ -12,7 +12,10 @@ const app = express()
 
 // CORS configuration
 app.use(cors({
-    origin: true,
+    origin: true['http://localhost:3000',
+        'https://your-frontend-domain.vercel.app',
+        'https://your-frontend-domain.netlify.app'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'token']
