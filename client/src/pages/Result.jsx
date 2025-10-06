@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useRef } from 'react'
 import {assets} from '../assets/assets'
 import {motion} from 'framer-motion'
 import { AppContext } from '../context/AppContext'
-import { loadImage } from "canvas";
+// import { loadImage } from "canvas";
 
 const ChevronIcon = ({ open }) => (
   <svg
@@ -19,7 +19,7 @@ const ChevronIcon = ({ open }) => (
 //Custom Dropdown 
 const CustomDropdown = ({format = '',setFormat = () =>{},formats = []}) => {
   const [open, setOpen] = useState(false)
-  const dropdownRef = useRef(null);
+  // const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

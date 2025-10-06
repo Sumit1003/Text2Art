@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -13,7 +12,6 @@ const AppContextProvider = (props) => {
   const [loading, setLoading] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const navigate = useNavigate();
   const isAuthenticated = !!token;
 
   // Enhanced error handler
@@ -105,7 +103,8 @@ const AppContextProvider = (props) => {
         } else {
           toast.error(data.message);
           if (data.creditBalance === 0) {
-            navigate("/buy");
+            // Removed navigate since we can't use hook here
+            setShowLogin(true); // Show login modal instead
           }
           return null;
         }
@@ -116,7 +115,7 @@ const AppContextProvider = (props) => {
         setLoading(false);
       }
     },
-    [token, backendUrl, loadCreditsData, navigate, handleApiError]
+    [token, backendUrl, loadCreditsData, handleApiError]
   );
 
   const logout = useCallback(() => {
@@ -125,8 +124,9 @@ const AppContextProvider = (props) => {
     setToken("");
     setUser(null);
     setCredit(0);
-    navigate("/");
-  }, [navigate]);
+    // Removed navigate since we can't use hook here
+    window.location.href = "/"; // Use window.location instead
+  }, []);
 
   // Check token validity on app start
   const checkTokenValidity = useCallback(async () => {
