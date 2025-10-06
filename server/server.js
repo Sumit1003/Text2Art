@@ -1,21 +1,24 @@
-import express from 'express'
-import cors from 'cors'
-import 'dotenv/config'
-import mongoose from 'mongoose'
+import express from 'express';
+import cors from 'cors';
+import 'dotenv/config';
+import mongoose from 'mongoose';
 
-import connectDB from './config/mongodb.js'
-import userRouter from './routes/userRoutes.js'
-import imageRouter from './routes/imageRoutes.js'
+import connectDB from './config/mongodb.js';
+import userRouter from './routes/userRoutes.js';
+import imageRouter from './routes/imageRoutes.js';
 
-const PORT = process.env.PORT || 5000
-const app = express()
+const PORT = process.env.PORT || 5000;
+const app = express();
 
-// CORS configuration
+// ✅ Correct CORS configuration
 app.use(cors({
-    origin: true['https://text2art1.onrender.com'],
+    origin: [
+        'https://text2art1.onrender.com', // your deployed frontend
+        'http://localhost:3000',          // local dev frontend (optional)
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'token']
+    allowedHeaders: ['Content-Type', 'Authorization', 'token'],
 }));
 
 app.options('*', cors());
@@ -30,28 +33,27 @@ app.use((req, res, next) => {
     next();
 });
 
-// Database connection with verification
-connectDB().then(async () => {
-    console.log('MongoDB connected successfully');
-
-    // Verify connection and list databases
-    // const adminDb = mongoose.connection.db.admin();
-    // const databases = await adminDb.listDatabases();
-    // console.log('Available databases:', databases.databases.map(db => db.name));
-
-}).catch(err => {
-    console.error('MongoDB connection failed:', err);
-});
+// Database connection
+connectDB()
+    .then(async () => {
+        console.log('MongoDB connected successfully');
+    })
+    .catch((err) => {
+        console.error('MongoDB connection failed:', err);
+    });
 
 // Routes
-app.use('/api/user', userRouter)
-app.use('/api/image', imageRouter)
+app.use('/api/user', userRouter);
+app.use('/api/image', imageRouter);
 
-app.get('/health', (req, res) => res.json({
-    message: "API Working fine",
-    database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
-    databaseName: mongoose.connection.name,
-    timestamp: new Date().toISOString()
-}))
+// Health check route
+app.get('/health', (req, res) =>
+    res.json({
+        message: 'API Working fine',
+        database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+        databaseName: mongoose.connection.name,
+        timestamp: new Date().toISOString(),
+    })
+);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
