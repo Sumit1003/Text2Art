@@ -375,7 +375,7 @@ const Profile = () => {
                         Create New Image
                       </h4>
                       <p className="text-purple-100 text-sm">
-                        Start generating amazing AI art
+                        Start generating amazing AI Art
                       </p>
                     </motion.button>
 
