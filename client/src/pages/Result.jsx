@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { assets } from "../assets/assets";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
+import ImageEditor from "../components/ImageEditor";
+import { toast } from "react-toastify";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 const ChevronIcon = ({ open }) => (
   <svg
@@ -84,20 +87,71 @@ const Result = () => {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
   const [format, setFormat] = useState("PNG");
-  const { generateImage } = useContext(AppContext);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const {
+    generateImage,
+    isAuthenticated,
+    removeBackground,
+    enhanceImage,
+    setShowLogin,
+  } = useContext(AppContext);
+
+  const action = searchParams.get("action");
+
+  // Handle direct feature access via URL parameters
+  useEffect(() => {
+    if (action && isAuthenticated && isImageLoaded) {
+      handleFeatureAction(action);
+    }
+  }, [action, isAuthenticated, isImageLoaded]);
+
+  const handleFeatureAction = async (actionType) => {
+    if (!isImageLoaded) {
+      toast.info("Please wait for image generation to complete");
+      return;
+    }
+
+    switch (actionType) {
+      case "enhance":
+        const enhanced = await enhanceImage(image);
+        if (enhanced) {
+          setImage(enhanced);
+          toast.success("Image enhanced successfully!");
+        }
+        break;
+      case "remove-bg":
+        const bgRemoved = await removeBackground(image);
+        if (bgRemoved) {
+          setImage(bgRemoved);
+          toast.success("Background removed successfully!");
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     if (input) {
-      const img = await generateImage(input);
-      if (img) {
-        setImage(img);
+      const generatedImage = await generateImage(input);
+      if (generatedImage) {
         setIsImageLoaded(true);
+        setImage(generatedImage);
+        toast.success("Image generated successfully!");
+
+        // Auto-process if action parameter exists
+        if (action && isAuthenticated) {
+          setTimeout(() => {
+            handleFeatureAction(action);
+          }, 1000);
+        }
       }
     }
-
     setLoading(false);
   };
 
@@ -105,36 +159,43 @@ const Result = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Convert and download image
-  const convertImage = (input, format) => {
-    const extension = format.toLowerCase();
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+  // Browser-compatible image loading function
+  const loadImage = (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  };
 
-    const imageElement = new Image();
-    imageElement.crossOrigin = "anonymous"; // Fix CORS
-    imageElement.src = input;
-    imageElement.onload = () => {
-      canvas.width = imageElement.width;
-      canvas.height = imageElement.height;
-      ctx.drawImage(imageElement, 0, 0);
+  // Convert Image into different formats [JPEG, PNG, SVG, WebP]
+  const convertImage = async (input, format) => {
+    try {
+      const image = await loadImage(input);
+      const extension = format.toLowerCase();
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.drawImage(image, 0, 0);
 
+      // Trigger image download
       const downloadImage = (blob) => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `image.${extension}`;
-        document.body.appendChild(link);
+        link.download = `imagify-${Date.now()}.${extension}`;
         link.click();
-        document.body.removeChild(link);
         URL.revokeObjectURL(url);
       };
 
       if (extension === "svg") {
         const dataUrl = canvas.toDataURL("image/png");
         const svgContent = `
-          <svg xmlns='http://www.w3.org/2000/svg' width='${imageElement.width}' height='${imageElement.height}'>
-            <image href='${dataUrl}' width='${imageElement.width}' height='${imageElement.height}'/>
+          <svg xmlns='http://www.w3.org/2000/svg' width='${image.width}' height='${image.height}'>
+            <image href='${dataUrl}' width='${image.width}' height='${image.height}'/>
           </svg>`;
         const blob = new Blob([svgContent], { type: "image/svg+xml" });
         downloadImage(blob);
@@ -142,9 +203,45 @@ const Result = () => {
         canvas.toBlob((blob) => {
           if (blob) downloadImage(blob);
           else console.error("Failed to convert canvas to blob.");
-        }, `image/${extension}`);
+        }, `image/${extension === "jpg" ? "jpeg" : extension}`);
       }
-    };
+    } catch (error) {
+      console.error("Error converting image:", error);
+      toast.error("Failed to download image");
+    }
+  };
+
+  // Quick action buttons for direct feature access
+  const quickActions = [
+    {
+      id: "enhance",
+      name: "Enhance Image",
+      icon: "✨",
+      color: "purple",
+      description: "AI-powered quality enhancement",
+    },
+    {
+      id: "remove-bg",
+      name: "Remove Background",
+      icon: "🎯",
+      color: "green",
+      description: "Remove background automatically",
+    },
+  ];
+
+  const handleQuickAction = async (actionId) => {
+    if (!isAuthenticated) {
+      toast.error("Please login to use AI tools");
+      setShowLogin(true);
+      return;
+    }
+
+    if (!isImageLoaded) {
+      toast.info("Please generate an image first");
+      return;
+    }
+
+    await handleFeatureAction(actionId);
   };
 
   return (
@@ -154,62 +251,151 @@ const Result = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       onSubmit={onSubmitHandler}
-      className="flex flex-col min-h-[90vh] justify-center items-center"
+      className="flex flex-col min-h-[90vh] justify-center items-center px-4"
     >
-      <div className="relative">
-        <img src={image} alt="" className="max-w-sm rounded" />
-        <span
-          className={`absolute bottom-0 h-1 bg-blue-500 ${
-            loading ? "w-full transition-all duration-[10s]" : "w-0"
-          }`}
-        ></span>
-      </div>
-      {loading && <p>Loading...</p>}
-
-      {!isImageLoaded && (
-        <div className="flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full">
-          <input
-            type="text"
-            placeholder="Describe what you want to generate"
-            className="flex-1 bg-transparent outline-none ml-8 max-sm:w-20 placeholder-color"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+      {/* Image Display Section */}
+      <div className="text-center">
+        <div className="relative inline-block">
+          <img
+            src={image}
+            alt="Generated result"
+            className="max-w-full md:max-w-sm rounded-lg shadow-lg border border-gray-200"
           />
-          <button
-            type="submit"
-            className="bg-zinc-900 px-10 sm:px-16 py-3 rounded-full"
-          >
-            Generate
-          </button>
+          <span
+            className={`absolute bottom-0 left-0 h-1 bg-blue-500 transition-all duration-1000 ${
+              loading ? "w-full" : "w-0"
+            }`}
+          ></span>
+        </div>
+        <p className={`mt-2 text-sm text-gray-600 ${!loading ? "hidden" : ""}`}>
+          {loading ? "Generating your image..." : ""}
+        </p>
+      </div>
+
+      {/* Quick Prompts */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="mt-6 text-center"
+      >
+        <p className="text-gray-600 mb-3 font-medium">Try these prompts:</p>
+        <div className="flex flex-wrap justify-center gap-2">
+          {[
+            "Cyberpunk cityscape",
+            "Fantasy castle in clouds",
+            "Abstract liquid art",
+            "Portrait of an astronaut",
+          ].map((prompt) => (
+            <motion.button
+              key={prompt}
+              type="button"
+              onClick={() => setInput(prompt)}
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors duration-200"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {prompt}
+            </motion.button>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Generate New Image Form */}
+      {!isImageLoaded && (
+        <div className="flex flex-col items-center w-full max-w-2xl">
+          <div className="flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full">
+            <input
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              type="text"
+              placeholder="Describe what you want to generate..."
+              className="flex-1 bg-transparent outline-none ml-8 max-sm:w-20 placeholder-gray-300"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-zinc-900 px-10 sm:px-16 py-3 rounded-full hover:bg-zinc-800 transition-colors disabled:opacity-50"
+            >
+              {loading ? "Generating..." : "Generate"}
+            </button>
+          </div>
         </div>
       )}
 
+      {/* After Image Generation - Tools Section */}
       {isImageLoaded && (
-        <div className="flex flex-col items-center">
-          <div className="flex gap-5 flex-wrap justify-center text-white text-sm p-0.5 mt-10 rounded-full">
-            <p
+        <div className="flex flex-col items-center w-full max-w-6xl mt-8">
+          {/* Quick Action Buttons */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 w-full max-w-2xl">
+            {quickActions.map((action) => (
+              <button
+                key={action.id}
+                onClick={() => handleQuickAction(action.id)}
+                disabled={!isAuthenticated}
+                className={`flex items-center p-4 rounded-xl border-2 transition-all ${
+                  isAuthenticated
+                    ? `bg-${action.color}-50 border-${action.color}-200 hover:border-${action.color}-500 hover:shadow-md cursor-pointer`
+                    : "bg-gray-100 border-gray-200 cursor-not-allowed opacity-60"
+                }`}
+              >
+                <span className="text-2xl mr-3">{action.icon}</span>
+                <div className="text-left">
+                  <div className="font-semibold text-gray-800">
+                    {action.name}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {action.description}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 flex-wrap justify-center mb-8">
+            <button
               onClick={() => setIsImageLoaded(false)}
-              className="bg-transparent border border-zinc-900 text-black px-8 py-3 rounded-full cursor-pointer"
+              className="bg-transparent border border-zinc-900 text-black px-8 py-3 rounded-full cursor-pointer hover:bg-zinc-50 transition-colors"
             >
               Generate Another
-            </p>
+            </button>
             <CustomDropdown
               format={format}
               setFormat={setFormat}
               formats={["JPEG", "PNG", "WebP", "SVG"]}
             />
-          </div>
-          <div className="flex sm:justify-end justify-center mt-5 p-0.5 text-white">
-            <div
-              onClick={(e) => {
+            <button
+              onClick={async (e) => {
                 e.preventDefault();
-                convertImage(image, format);
+                await convertImage(image, format);
               }}
-              className="w-40 bg-zinc-900 px-10 py-3 rounded-full cursor-pointer"
+              className="w-40 bg-zinc-900 px-10 py-3 rounded-full cursor-pointer hover:bg-zinc-800 transition-colors text-white"
             >
               Download
-            </div>
+            </button>
           </div>
+
+          {/* Cloudinary AI Tools Section */}
+          <div className="w-full max-w-4xl">
+            <ImageEditor
+              imageUrl={image}
+              onImageProcessed={(processedImage) => {
+                setImage(processedImage);
+                toast.success("Image processed successfully!");
+              }}
+            />
+          </div>
+
+          {/* Info Section */}
+          {!isAuthenticated && (
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200 max-w-md text-center">
+              <p className="text-blue-800 text-sm">
+                💡 <strong>Pro Tip:</strong> Login to access all AI image
+                enhancement tools!
+              </p>
+            </div>
+          )}
         </div>
       )}
     </motion.form>

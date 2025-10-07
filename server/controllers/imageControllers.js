@@ -102,19 +102,24 @@ export const generateImage = async (req, res) => {
         const filename = `${cloudResult.public_id}.${cloudResult.format}`;
 
         // Update user credits
-        const updatedUser = await userModel.findByIdAndUpdate(
-            user._id,
-            { $inc: { creditBalance: -1 } },
-            { new: true }
-        );
+        let updatedUser;
+        try {
+            updatedUser = await userModel.findByIdAndUpdate(
+                user._id,
+                { $inc: { creditBalance: -1 } },
+                { new: true }
+            );
+        } catch (creditErr) {
+            console.error("Error updating credits:", creditErr);
+        }
 
         // Save the generated image reference in DB
         const newGeneration = await imageModel.create({
             userId: user._id,
             prompt,
-            imageUrl: imageUrl,
-            filename: filename,
-            filePath: imageUrl,
+            imageUrl,
+            filename,
+            imagePath: imageUrl, // for Cloudinary, imagePath is same as imageUrl
         });
 
         console.log("Image reference saved to database (Cloudinary).");

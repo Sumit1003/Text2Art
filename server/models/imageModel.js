@@ -24,6 +24,21 @@ const imageSchema = new mongoose.Schema({
         type: String,
         default: 'general',
     },
+
+    // Add Cloudinary fields
+    cloudinaryPublicId: {
+        type: String,
+    },
+    processedImages: [{
+        operation: String, // 'remove-bg', 'upscale', 'enhance', 'optimize'
+        processedUrl: String,
+        publicId: String,
+        processedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    
     createdAt: {
         type: Date,
         default: Date.now,

@@ -6,208 +6,463 @@ const Features = () => {
   const features = [
     {
       icon: "🎨",
-      title: "AI-Powered Art Generation",
+      title: "AI Image Generation",
       description:
-        "Create stunning artwork with advanced AI models. Transform your ideas into visual masterpieces with just a text prompt.",
+        "Create stunning artwork from text prompts using advanced AI models. Transform ideas into visual masterpieces instantly.",
       details: [
         "Multiple art styles",
         "High-resolution output",
-        "Fast generation",
+        "Fast 30-second generation",
+        "Batch processing",
       ],
+      action: "/result",
+      color: "purple",
+    },
+    {
+      icon: "✨",
+      title: "AI Image Enhancement",
+      description:
+        "Improve your existing images with AI-powered enhancement. Boost quality, colors, and details automatically.",
+      details: [
+        "Quality improvement",
+        "Color enhancement",
+        "Detail sharpening",
+        "Auto-correction",
+      ],
+      action: "/upload?action=enhance",
+      color: "blue",
+    },
+    {
+      icon: "🎯",
+      title: "Background Removal",
+      description:
+        "Remove backgrounds from any image with AI precision. Perfect for product photos, portraits, and creative projects.",
+      details: [
+        "One-click removal",
+        "High accuracy",
+        "Transparent PNG output",
+        "Batch processing",
+      ],
+      action: "/upload?action=remove-bg",
+      color: "green",
+    },
+    {
+      icon: "🔍",
+      title: "Image Upscaling",
+      description:
+        "Increase image resolution without losing quality. Make your images sharper and more detailed with AI upscaling.",
+      details: [
+        "2x-4x upscaling",
+        "Quality preservation",
+        "Noise reduction",
+        "Detail enhancement",
+      ],
+      action: "/upload?action=upscale",
+      color: "orange",
     },
     {
       icon: "⚡",
-      title: "Lightning Fast",
+      title: "Image Optimization",
       description:
-        "Generate beautiful images in seconds, not hours. Our optimized AI delivers results when you need them.",
+        "Optimize images for web and mobile with intelligent compression. Reduce file size while maintaining quality.",
       details: [
-        "30-second generation",
-        "Real-time preview",
-        "Batch processing",
+        "Smart compression",
+        "Format conversion",
+        "Quality optimization",
+        "Fast delivery",
       ],
+      action: "/upload?action=optimize",
+      color: "red",
+    },
+    {
+      icon: "📤",
+      title: "Upload & Process",
+      description:
+        "Upload your own images and apply multiple AI enhancements. Support for all common image formats.",
+      details: [
+        "Multiple formats",
+        "Batch upload",
+        "Real-time preview",
+        "Cloud storage",
+      ],
+      action: "/upload",
+      color: "teal",
+    },
+  ];
+
+  const advancedFeatures = [
+    {
+      icon: "🔄",
+      title: "Batch Processing",
+      description:
+        "Process multiple images at once with our batch processing system. Save time on large projects.",
+      status: "premium",
     },
     {
       icon: "🎭",
-      title: "Multiple Art Styles",
+      title: "Style Transfer",
       description:
-        "Choose from various artistic styles including realistic, anime, fantasy, abstract, and more.",
-      details: ["10+ art styles", "Style mixing", "Custom parameters"],
+        "Apply artistic styles to your images. Transform photos into paintings with various art styles.",
+      status: "premium",
     },
     {
-      icon: "💾",
-      title: "Cloud Gallery",
+      icon: "🤖",
+      title: "AI Face Enhancement",
       description:
-        "All your creations are safely stored in the cloud. Access your gallery from any device, anywhere.",
-      details: ["Unlimited storage", "Organized collections", "Easy sharing"],
+        "Automatically enhance faces in portraits with AI. Improve skin, eyes, and overall portrait quality.",
+      status: "coming-soon",
     },
     {
-      icon: "🔒",
-      title: "Privacy First",
+      icon: "🌅",
+      title: "Background Replacement",
       description:
-        "Your prompts and generated images are private by default. Full control over your creative work.",
-      details: ["Private gallery", "Secure storage", "Data encryption"],
-    },
-    {
-      icon: "🚀",
-      title: "Easy to Use",
-      description:
-        "No technical skills required. Simple interface that lets you focus on creativity, not complexity.",
-      details: ["Intuitive design", "One-click generation", "Mobile friendly"],
+        "Replace backgrounds with AI-generated scenes or your own images. Create professional composites.",
+      status: "coming-soon",
     },
   ];
 
   const stats = [
-    { number: "10K+", label: "Images Generated" },
-    { number: "500+", label: "Happy Users" },
-    { number: "50+", label: "Art Styles" },
-    { number: "99.9%", label: "Uptime" },
+    { number: "50K+", label: "Images Generated", icon: "🖼️" },
+    { number: "10K+", label: "Happy Users", icon: "😊" },
+    { number: "99.9%", label: "Uptime", icon: "⚡" },
+    { number: "24/7", label: "AI Processing", icon: "🤖" },
+  ];
+
+  const workflowSteps = [
+    {
+      step: "1",
+      title: "Choose Your Method",
+      description: "Generate new images or upload existing ones",
+      options: ["Text-to-Image", "Image Upload"],
+      icon: "🚀",
+    },
+    {
+      step: "2",
+      title: "Apply AI Magic",
+      description: "Select from various AI enhancement tools",
+      options: ["Enhance", "Remove BG", "Upscale", "Optimize"],
+      icon: "✨",
+    },
+    {
+      step: "3",
+      title: "Download & Share",
+      description: "Get high-quality results instantly",
+      options: ["Multiple Formats", "High Quality", "Fast Download"],
+      icon: "💾",
+    },
   ];
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <motion.h1
-            className="text-4xl md:text-5xl font-bold text-gray-800 mb-6"
+            className="text-4xl md:text-6xl font-bold text-gray-800 mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Powerful Features for{" "}
-            <span className="text-blue-600">Creative Minds</span>
+            Powerful AI Tools for{" "}
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Every Creator
+            </span>
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
+            className="text-xl text-gray-600 max-w-3xl mx-auto mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Discover everything you need to bring your imagination to life with
-            our advanced AI image generation platform.
+            From AI image generation to professional photo editing - everything
+            you need to bring your creative vision to life.
           </motion.p>
-        </div>
+
+          {/* Quick Action Buttons */}
+          <motion.div
+            className="flex flex-wrap justify-center gap-4 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+          </motion.div>
+        </motion.div>
 
         {/* Stats */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           {stats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
+            <motion.div
+              key={index}
+              className="bg-white rounded-2xl p-6 text-center shadow-lg border border-gray-100"
+              whileHover={{ scale: 1.05, y: -5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="text-3xl mb-2">{stat.icon}</div>
+              <div className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
                 {stat.number}
               </div>
-              <div className="text-gray-600 font-medium">{stat.label}</div>
-            </div>
+              <div className="text-gray-600 font-medium text-sm">
+                {stat.label}
+              </div>
+            </motion.div>
           ))}
         </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all duration-300"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600 mb-4">{feature.description}</p>
-              <ul className="space-y-2">
-                {feature.details.map((detail, detailIndex) => (
-                  <li
-                    key={detailIndex}
-                    className="flex items-center text-sm text-gray-500"
+        {/* Workflow Section */}
+        <motion.div
+          className="bg-white rounded-2xl shadow-lg p-8 mb-16 border border-gray-100"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+            🎯 How It Works
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {workflowSteps.map((step, index) => (
+              <motion.div
+                key={step.step}
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+              >
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+                  {step.step}
+                </div>
+                <div className="text-3xl mb-4">{step.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 mb-4">{step.description}</p>
+                <div className="space-y-2">
+                  {step.options.map((option, optIndex) => (
+                    <div
+                      key={optIndex}
+                      className="text-sm text-gray-500 bg-gray-50 rounded-lg py-1 px-3"
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Main Features Grid */}
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+            ✨ Core Features
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 group overflow-hidden relative"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                {/* Gradient Overlay */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br from-${feature.color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                />
+
+                <div className="relative z-10">
+                  <div className="text-4xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {feature.description}
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    {feature.details.map((detail, detailIndex) => (
+                      <li
+                        key={detailIndex}
+                        className="flex items-center text-sm text-gray-500"
+                      >
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 flex-shrink-0"></span>
+                        {detail}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    to={feature.action}
+                    className={`inline-flex items-center px-4 py-2 bg-${feature.color}-500 text-white rounded-lg font-medium hover:bg-${feature.color}-600 transition-colors group`}
                   >
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                    {detail}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
+                    Try Now
+                    <svg
+                      className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Advanced Features */}
+        <motion.div
+          className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-8 mb-16 text-white"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+        >
+          <h2 className="text-3xl font-bold text-center mb-12">
+            🚀 Advanced Features
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {advancedFeatures.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl flex-shrink-0">{feature.icon}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="text-xl font-semibold">{feature.title}</h3>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          feature.status === "premium"
+                            ? "bg-yellow-500 text-yellow-900"
+                            : "bg-blue-500 text-blue-900"
+                        }`}
+                      >
+                        {feature.status === "premium"
+                          ? "PREMIUM"
+                          : "COMING SOON"}
+                      </span>
+                    </div>
+                    <p className="text-white/80 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* CTA Section */}
         <motion.div
-          className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12 text-center text-white"
+          className="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center border border-gray-100 mb-16"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Ready to Create Magic?
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            Ready to Transform Your Creativity?
           </h2>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of creators who are already transforming their ideas
-            into stunning visual art with Imagify.
+          <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+            Join thousands of creators who are already using Imagify to
+            generate, enhance, and transform their images with AI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/"
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              to="/result"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-xl transition-all hover:scale-105"
             >
-              Start Creating Free
+              🎨 Start Creating Free
             </Link>
             <Link
-              to="/pricing"
-              className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+              to="/upload"
+              className="border-2 border-purple-500 text-purple-600 px-8 py-4 rounded-2xl font-semibold hover:bg-purple-50 transition-all hover:scale-105"
             >
-              View Pricing
+              📤 Try Image Enhancement
             </Link>
           </div>
         </motion.div>
 
         {/* FAQ Section */}
         <motion.div
-          className="mt-16"
+          className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
         >
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-            Frequently Asked Questions
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+            ❓ Frequently Asked Questions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {[
               {
-                question: "How does AI image generation work?",
+                question: "What types of images can I enhance?",
                 answer:
-                  "Our AI analyzes your text prompt and generates unique images using advanced machine learning models trained on millions of artworks.",
+                  "You can enhance portraits, landscapes, product photos, and more. Our AI works best with clear, well-lit images.",
               },
               {
-                question: "What image formats are supported?",
+                question: "How accurate is background removal?",
                 answer:
-                  "We generate high-quality PNG images with transparent backgrounds, perfect for both web and print use.",
+                  "Our AI achieves 95%+ accuracy for most images. Complex backgrounds with fine details may require manual touch-ups.",
               },
               {
-                question: "Can I use the images commercially?",
+                question: "Can I use enhanced images commercially?",
                 answer:
-                  "Yes! All images you generate are yours to use for personal and commercial projects.",
+                  "Yes! All images you enhance or generate are yours to use for personal and commercial projects.",
               },
               {
-                question: "How long does image generation take?",
+                question: "What's the maximum image size for upload?",
                 answer:
-                  "Typically 30-60 seconds depending on complexity. We're constantly optimizing for faster results.",
+                  "We support images up to 10MB. For best results with enhancement, use high-quality source images.",
+              },
+              {
+                question: "How long does image processing take?",
+                answer:
+                  "Most enhancements take 15-30 seconds. Background removal is typically faster at 5-10 seconds.",
+              },
+              {
+                question: "Do you support batch processing?",
+                answer:
+                  "Yes! Premium users can process multiple images at once. This feature is coming soon for all users.",
               },
             ].map((faq, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="bg-white rounded-lg p-6 shadow-sm border border-gray-100"
+                className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.1 + index * 0.1 }}
               >
-                <h3 className="font-semibold text-gray-800 mb-2">
+                <h3 className="font-semibold text-gray-800 mb-3 text-lg">
                   {faq.question}
                 </h3>
-                <p className="text-gray-600">{faq.answer}</p>
-              </div>
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </motion.div>
             ))}
           </div>
         </motion.div>
