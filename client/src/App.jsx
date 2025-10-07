@@ -20,7 +20,7 @@ import Create from "./pages/Create";
 import UploadImage from "./pages/UploadImage";
 import ProcessImage from "./pages/ProcessImage";
 import Testimonials from './components/Testimonials';
-import Profile from './pages/Profile';
+import Profile from "./pages/Profile";
 
 
 const App = () => {

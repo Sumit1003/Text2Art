@@ -9,6 +9,7 @@ import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import fs from 'fs';
 
 // Route imports
 import cloudinaryRoutes from './routes/cloudinaryRoutes.js';
@@ -229,26 +230,79 @@ app.get('/api/status', (req, res) => {
     });
 });
 
-// Serve React build in production
+// Serve React build in production - FIXED VERSION
 if (process.env.NODE_ENV === 'production') {
-    const frontendBuildPath = path.join(__dirname, '..', 'client', 'dist');
+    // Try multiple possible paths for the React build
+    const possiblePaths = [
+        path.join(__dirname, '..', 'client', 'dist'),  // Local development structure
+        path.join(__dirname, '..', 'dist'),           // Alternative structure
+        path.join(__dirname, 'dist'),                 // Same directory structure
+        '/opt/render/project/src/client/dist',        // Render.com specific path
+        path.join(process.cwd(), 'client', 'dist'),   // Current working directory
+        path.join(process.cwd(), 'dist'),             // Current working directory dist
+    ];
 
-    // Serve static files from React build
-    app.use(express.static(frontendBuildPath, {
-        maxAge: '1y',
-        etag: false,
-        index: false
-    }));
+    let frontendBuildPath = null;
 
-    // Handle React routing, return all requests to React app
-    app.get('*', (req, res) => {
-        // Don't serve API routes through React
-        if (req.path.startsWith('/api/') || req.path.startsWith('/health')) {
-            return res.status(404).json({ error: 'API route not found' });
+    // Find the first path that exists and contains index.html
+    for (const buildPath of possiblePaths) {
+        try {
+            const indexPath = path.join(buildPath, 'index.html');
+            if (fs.existsSync(indexPath)) {
+                frontendBuildPath = buildPath;
+                console.log(`✅ Found React build at: ${buildPath}`);
+                break;
+            }
+        } catch (error) {
+            console.log(`❌ React build not found at: ${buildPath}`);
         }
+    }
 
-        res.sendFile(path.join(frontendBuildPath, 'index.html'));
-    });
+    if (frontendBuildPath) {
+        // Serve static files from React build
+        app.use(express.static(frontendBuildPath, {
+            maxAge: '1y',
+            etag: false,
+            index: false
+        }));
+
+        // Handle React routing, return all requests to React app
+        app.get('*', (req, res) => {
+            // Don't serve API routes through React
+            if (req.path.startsWith('/api/') || req.path.startsWith('/health')) {
+                return res.status(404).json({ error: 'API route not found' });
+            }
+
+            try {
+                res.sendFile(path.join(frontendBuildPath, 'index.html'));
+            } catch (error) {
+                console.error('Error serving React app:', error);
+                res.status(500).json({
+                    error: 'Frontend not available',
+                    message: 'React build files not found'
+                });
+            }
+        });
+
+        console.log(`🚀 React static files serving from: ${frontendBuildPath}`);
+    } else {
+        console.log('⚠️  React build not found. Running in API-only mode.');
+
+        // Fallback route for root path
+        app.get('/', (req, res) => {
+            res.json({
+                message: '🚀 Imagify AI Backend Server',
+                status: 'API is running',
+                frontend: 'Frontend build not found - running in API mode',
+                endpoints: {
+                    health: '/health',
+                    status: '/api/status',
+                    api: '/api/v1'
+                },
+                nextSteps: 'Deploy React app separately or check build process'
+            });
+        });
+    }
 } else {
     // Development route for testing
     app.get('/', (req, res) => {
@@ -283,6 +337,14 @@ app.use('/api/*', (req, res) => {
 // Global Error Handler
 app.use((error, req, res, next) => {
     console.error('💥 Global Error Handler:', error);
+
+    // Handle ENOENT errors (file not found) gracefully
+    if (error.code === 'ENOENT') {
+        return res.status(404).json({
+            error: 'Resource not found',
+            message: 'The requested resource was not found on the server'
+        });
+    }
 
     // Mongoose validation error
     if (error.name === 'ValidationError') {
@@ -372,7 +434,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
     🚀 Imagify AI Server Started!
     📍 Port: ${PORT}
     🌍 Environment: ${process.env.NODE_ENV || 'development'}
-    🗄️  Database: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Connecting...'}
+    🗄️  Database: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Connining...'}
     ⏰ Started at: ${new Date().toISOString()}
     
     📊 Health Check: http://localhost:${PORT}/health
