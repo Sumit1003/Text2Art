@@ -15,11 +15,11 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve legacy local images if present (keeps backward compatibility)
+// Serve uploaded images
 const uploadsDir = path.join(__dirname, 'uploads', 'images');
 app.use('/api/images', express.static(uploadsDir));
 
-// CORS config
+// CORS
 app.use(cors({
     origin: [
         'https://text2art1.onrender.com',
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// DB connect
+// DB Connect
 connectDB()
     .then(() => console.log('MongoDB connected successfully'))
     .catch((err) => console.error('MongoDB connection failed:', err));
@@ -51,14 +51,22 @@ connectDB()
 app.use('/api/user', userRouter);
 app.use('/api/image', imageRouter);
 
-// Health route
-app.get('/health', (req, res) =>
+// Health check
+app.get('/health', (req, res) => {
     res.json({
         message: 'API Working fine',
         database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
         databaseName: mongoose.connection.name,
         timestamp: new Date().toISOString(),
     })
-);
+});
+
+// Serve React build in production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+    });
+}
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
