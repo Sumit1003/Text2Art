@@ -21,7 +21,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['react-toastify', 'some-other-ui-library']
+          ui: ['react-toastify']  // ← Fixed version
         }
       }
     }
