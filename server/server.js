@@ -174,10 +174,10 @@ const connectWithRetry = async (retries = 5, delay = 5000) => {
 connectWithRetry();
 
 // Routes with versioning
-app.use('/api/v1/user', userRouter);
-app.use('/api/v1/image', imageRouter);
-app.use('/api/v1/gallery', imageRouter); // Alias for gallery routes
-app.use('/api/v1/cloudinary', cloudinaryRoutes);
+app.use('/api/user', userRouter);
+app.use('/api/image', imageRouter);
+app.use('/api/gallery', imageRouter); // Alias for gallery routes
+app.use('/api/cloudinary', cloudinaryRoutes);
 
 // API Health check with detailed status
 app.get('/health', async (req, res) => {
@@ -222,10 +222,10 @@ app.get('/api/status', (req, res) => {
         service: 'Imagify AI Backend',
         timestamp: new Date().toISOString(),
         endpoints: {
-            user: '/api/v1/user',
-            image: '/api/v1/image',
-            gallery: '/api/v1/gallery',
-            cloudinary: '/api/v1/cloudinary'
+            user: '/api/user',
+            image: '/api/image',
+            gallery: '/api/gallery',
+            cloudinary: '/api/cloudinary'
         }
     });
 });
@@ -326,10 +326,10 @@ app.use('/api/*', (req, res) => {
         path: req.originalUrl,
         method: req.method,
         availableEndpoints: {
-            user: '/api/v1/user',
-            image: '/api/v1/image',
-            gallery: '/api/v1/gallery',
-            cloudinary: '/api/v1/cloudinary'
+            user: '/api//user',
+            image: '/api//image',
+            gallery: '/api//gallery',
+            cloudinary: '/api/cloudinary'
         }
     });
 });
