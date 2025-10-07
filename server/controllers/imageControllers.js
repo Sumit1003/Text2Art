@@ -1,33 +1,44 @@
-import axios from 'axios';
+import axios from "axios";
 import userModel from "../models/userModel.js";
 import imageModel from "../models/imageModel.js";
 import FormData from "form-data";
-import mongoose from 'mongoose';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import mongoose from "mongoose";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import cloudinary from "../config/cloudinary.js";
+import streamifier from "streamifier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, '../uploads/images');
+// Optional: keep an uploads folder for backward compatibility (not used for new uploads)
+const uploadsDir = path.join(__dirname, "../uploads/images");
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Generate image using ClipDrop API
+// Helper: upload buffer to Cloudinary via upload_stream
+const uploadBufferToCloudinary = (buffer, options = {}) =>
+    new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(options, (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+        });
+        streamifier.createReadStream(buffer).pipe(uploadStream);
+    });
+
+// Generate image using ClipDrop API, upload to Cloudinary, save reference in DB
 export const generateImage = async (req, res) => {
     try {
         const { prompt } = req.body;
         const userId = req.user?.id;
 
-        console.log('Generate image request:', { prompt, userId });
+        console.log("Generate image request:", { prompt, userId });
 
         if (!prompt) {
             return res.status(400).json({ success: false, message: "Prompt is required" });
         }
-
         if (!userId) {
             return res.status(401).json({ success: false, message: "User not authenticated" });
         }
@@ -45,51 +56,50 @@ export const generateImage = async (req, res) => {
             });
         }
 
-        // Check if ClipDrop API key is available
         if (!process.env.CLIPDROP_API) {
-            console.error('ClipDrop API key missing');
+            console.error("ClipDrop API key missing");
             return res.status(500).json({
                 success: false,
-                message: "API configuration error"
+                message: "API configuration error",
             });
         }
 
-        console.log('Calling ClipDrop API...');
+        console.log("Calling ClipDrop API...");
 
         // Prepare form data for ClipDrop API
         const formData = new FormData();
         formData.append("prompt", prompt);
 
-        const response = await axios.post(
-            "https://clipdrop-api.co/text-to-image/v1",
-            formData,
-            {
-                headers: {
-                    "x-api-key": process.env.CLIPDROP_API,
-                    ...formData.getHeaders(),
-                },
-                responseType: "arraybuffer",
-                timeout: 60000,
-            }
-        );
+        const response = await axios.post("https://clipdrop-api.co/text-to-image/v1", formData, {
+            headers: {
+                "x-api-key": process.env.CLIPDROP_API,
+                ...formData.getHeaders(),
+            },
+            responseType: "arraybuffer",
+            timeout: 60000,
+        });
 
-        console.log('ClipDrop API response status:', response.status);
+        console.log("ClipDrop API response status:", response.status);
 
         if (!response.data || response.data.length === 0) {
-            throw new Error('Empty response from ClipDrop API');
+            throw new Error("Empty response from ClipDrop API");
         }
 
-        // Generate unique filename
-        const timestamp = Date.now();
-        const filename = `image_${userId}_${timestamp}.png`;
-        const filePath = path.join(uploadsDir, filename);
+        // Convert to buffer
+        const buffer = Buffer.from(response.data);
 
-        // Save image as file
-        fs.writeFileSync(filePath, response.data);
-        console.log('Image saved as file:', filename);
+        // Upload buffer to Cloudinary
+        let cloudResult;
+        try {
+            cloudResult = await uploadBufferToCloudinary(buffer, { folder: "text2art" });
+        } catch (uploadErr) {
+            console.error("Cloudinary upload failed:", uploadErr);
+            return res.status(500).json({ success: false, message: "Image upload failed" });
+        }
 
-        // Create clean URL (not Base64)
-        const imageUrl = `/api/images/${filename}`;
+        // Cloudinary returned object with secure_url, public_id, format, etc.
+        const imageUrl = cloudResult.secure_url; // full https URL
+        const filename = `${cloudResult.public_id}.${cloudResult.format}`;
 
         // Update user credits
         const updatedUser = await userModel.findByIdAndUpdate(
@@ -98,74 +108,53 @@ export const generateImage = async (req, res) => {
             { new: true }
         );
 
-        // Save the generated image in DB with file reference
+        // Save the generated image reference in DB
         const newGeneration = await imageModel.create({
             userId: user._id,
             prompt,
-            imageUrl: imageUrl, // Now stores clean URL, not Base64
+            imageUrl: imageUrl,
             filename: filename,
-            filePath: filePath
+            filePath: imageUrl,
         });
 
-        console.log('Image reference saved to database');
+        console.log("Image reference saved to database (Cloudinary).");
 
-        // For immediate frontend display, you can still send Base64 in response
-        const base64Image = Buffer.from(response.data).toString("base64");
+        // Also send a base64 preview for immediate frontend display if you need it
+        const base64Image = buffer.toString("base64");
         const resultImage = `data:image/png;base64,${base64Image}`;
 
         res.status(200).json({
             success: true,
-            message: "Image generated successfully",
-            resultImage, // Send Base64 for immediate display
-            imageUrl,    // Also send the clean URL for future use
+            message: "Image generated and uploaded successfully",
+            resultImage, // immediate preview
+            imageUrl, // cloud URL for future display
             creditBalance: updatedUser.creditBalance,
             generationId: newGeneration._id,
         });
-
     } catch (error) {
         console.error("❌ Generate Image Error:", {
             message: error.message,
             status: error.response?.status,
         });
 
-        // Handle specific ClipDrop errors
         if (error.response) {
             if (error.response.status === 403) {
-                return res.status(403).json({
-                    success: false,
-                    message: "Invalid ClipDrop API key",
-                });
+                return res.status(403).json({ success: false, message: "Invalid ClipDrop API key" });
             }
-
             if (error.response.status === 429) {
-                return res.status(429).json({
-                    success: false,
-                    message: "Rate limit exceeded for ClipDrop API",
-                });
+                return res.status(429).json({ success: false, message: "Rate limit exceeded for ClipDrop API" });
             }
-
             if (error.response.status === 400) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid prompt or API request",
-                });
+                return res.status(400).json({ success: false, message: "Invalid prompt or API request" });
             }
         }
 
-        // Handle timeout errors
-        if (error.code === 'ECONNABORTED') {
-            return res.status(408).json({
-                success: false,
-                message: "Request timeout - image generation taking too long"
-            });
+        if (error.code === "ECONNABORTED") {
+            return res.status(408).json({ success: false, message: "Request timeout - image generation taking too long" });
         }
 
-        // Handle network errors
-        if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
-            return res.status(503).json({
-                success: false,
-                message: "Service unavailable - cannot reach ClipDrop API"
-            });
+        if (error.code === "ENOTFOUND" || error.code === "ECONNREFUSED") {
+            return res.status(503).json({ success: false, message: "Service unavailable - cannot reach ClipDrop API" });
         }
 
         res.status(500).json({
@@ -176,7 +165,7 @@ export const generateImage = async (req, res) => {
     }
 };
 
-// Add this new endpoint to serve image files
+// Serve image files for legacy /uploads images (unchanged behaviour)
 export const serveImage = async (req, res) => {
     try {
         const { filename } = req.params;
@@ -186,8 +175,7 @@ export const serveImage = async (req, res) => {
             return res.status(404).json({ success: false, message: "Image not found" });
         }
 
-        // Set appropriate headers and send file
-        res.setHeader('Content-Type', 'image/png');
+        res.setHeader("Content-Type", "image/png");
         res.sendFile(filePath);
     } catch (error) {
         console.error("Error serving image:", error);
@@ -195,7 +183,7 @@ export const serveImage = async (req, res) => {
     }
 };
 
-// Fetch user generations - UPDATED to handle both old and new data
+// Fetch user generations
 export const getUserGenerations = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -204,11 +192,12 @@ export const getUserGenerations = async (req, res) => {
         }
 
         const totalGenerations = await imageModel.countDocuments({ userId });
-        const recentGenerations = await imageModel.find({ userId })
+        const recentGenerations = await imageModel
+            .find({ userId })
             .sort({ createdAt: -1 })
             .limit(5)
             .select("prompt createdAt _id imageUrl filename")
-            .lean(); // Convert to plain objects
+            .lean();
 
         const uniqueStyles = await imageModel.distinct("style", { userId });
 
@@ -259,39 +248,35 @@ export const getGeneration = async (req, res) => {
     }
 };
 
-// Test ClipDrop API (temporary)
+// Test ClipDrop API (unchanged)
 export const testClipDrop = async (req, res) => {
     try {
-        console.log('Testing ClipDrop API key:', process.env.CLIPDROP_API ? 'Exists' : 'Missing');
+        console.log("Testing ClipDrop API key:", process.env.CLIPDROP_API ? "Exists" : "Missing");
 
         const formData = new FormData();
         formData.append("prompt", "a cute cat");
 
-        const response = await axios.post(
-            "https://clipdrop-api.co/text-to-image/v1",
-            formData,
-            {
-                headers: {
-                    "x-api-key": process.env.CLIPDROP_API,
-                    ...formData.getHeaders(),
-                },
-                responseType: "arraybuffer",
-                timeout: 30000,
-            }
-        );
+        const response = await axios.post("https://clipdrop-api.co/text-to-image/v1", formData, {
+            headers: {
+                "x-api-key": process.env.CLIPDROP_API,
+                ...formData.getHeaders(),
+            },
+            responseType: "arraybuffer",
+            timeout: 30000,
+        });
 
         res.json({
             success: true,
-            message: 'ClipDrop API is working',
-            status: response.status
+            message: "ClipDrop API is working",
+            status: response.status,
         });
     } catch (error) {
-        console.error('ClipDrop test error:', error.response?.status, error.message);
+        console.error("ClipDrop test error:", error.response?.status, error.message);
         res.status(500).json({
             success: false,
-            message: 'ClipDrop test failed',
+            message: "ClipDrop test failed",
             error: error.message,
-            status: error.response?.status
+            status: error.response?.status,
         });
     }
 };

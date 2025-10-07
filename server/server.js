@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
@@ -10,11 +12,18 @@ import imageRouter from './routes/imageRoutes.js';
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-// ✅ Correct CORS configuration
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve legacy local images if present (keeps backward compatibility)
+const uploadsDir = path.join(__dirname, 'uploads', 'images');
+app.use('/api/images', express.static(uploadsDir));
+
+// CORS config
 app.use(cors({
     origin: [
-        'https://text2art1.onrender.com', // your deployed frontend
-        'http://localhost:3000',          // local dev frontend (optional)
+        'https://text2art1.onrender.com',
+        'http://localhost:3000',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -27,26 +36,22 @@ app.options('*', cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Logging middleware
+// Logging
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path} - Origin: ${req.headers.origin}`);
     next();
 });
 
-// Database connection
+// DB connect
 connectDB()
-    .then(async () => {
-        console.log('MongoDB connected successfully');
-    })
-    .catch((err) => {
-        console.error('MongoDB connection failed:', err);
-    });
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch((err) => console.error('MongoDB connection failed:', err));
 
 // Routes
 app.use('/api/user', userRouter);
 app.use('/api/image', imageRouter);
 
-// Health check route
+// Health route
 app.get('/health', (req, res) =>
     res.json({
         message: 'API Working fine',

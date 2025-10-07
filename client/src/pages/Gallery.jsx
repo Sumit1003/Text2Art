@@ -32,17 +32,24 @@ const Gallery = () => {
         console.log("Gallery response:", response.data);
 
         if (response.data.success) {
-          setGenerations(response.data.recentGenerations || []);
+          // Normalize image URLs — handle both Cloudinary and local paths
+          const formatted = (response.data.recentGenerations || []).map(
+            (gen) => {
+              if (gen.imageUrl && !gen.imageUrl.startsWith("http")) {
+                // Prepend backend URL for local images
+                gen.imageUrl = `${backendUrl}${gen.imageUrl}`;
+              }
+              return gen;
+            }
+          );
+
+          setGenerations(formatted);
         } else {
           toast.error(response.data.message || "Failed to load gallery");
         }
       } catch (error) {
         console.error("Gallery fetch error:", error);
-        if (error.response?.status === 404) {
-          toast.error("Gallery feature not available yet");
-        } else {
-          toast.error("Error loading gallery");
-        }
+        toast.error("Error loading gallery");
       } finally {
         setLoading(false);
       }
@@ -51,7 +58,7 @@ const Gallery = () => {
     fetchGenerations();
   }, [isAuthenticated, token, backendUrl]);
 
-  // If the backend doesn't have the user-generations endpoint yet, show sample data
+  // If no data, show sample placeholders
   const sampleGenerations = [
     {
       _id: "1",
@@ -68,14 +75,6 @@ const Gallery = () => {
       prompt: "Cyberpunk city at night with neon lights",
       style: "fantasy",
       createdAt: new Date(Date.now() - 86400000),
-    },
-    {
-      _id: "3",
-      imageUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSELDWTIwRH0h0fl5T2PfOXXtdO-TNlKqPy-w&s",
-      prompt: "Cute anime character with big eyes",
-      style: "anime",
-      createdAt: new Date(Date.now() - 172800000),
     },
   ];
 
@@ -120,7 +119,7 @@ const Gallery = () => {
           </motion.p>
         </div>
 
-        {/* Filter Tabs - Only show when authenticated and has images */}
+        {/* Filter Tabs */}
         {isAuthenticated && displayGenerations.length > 0 && (
           <motion.div
             className="flex flex-wrap justify-center gap-4 mb-8"
@@ -169,6 +168,10 @@ const Gallery = () => {
                       src={generation.imageUrl}
                       alt={generation.prompt}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://via.placeholder.com/400x400?text=Image+Not+Found";
+                      }}
                     />
                   </div>
                   <div className="p-4">
