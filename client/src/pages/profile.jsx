@@ -804,19 +804,6 @@ const Profile = () => {
                       </div>
                     </div>
 
-                    {/* Two-Factor Authentication */}
-                    <div className="border border-gray-200 rounded-2xl p-6">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                        Two-Factor Authentication
-                      </h4>
-                      <p className="text-gray-600 mb-4">
-                        Add an extra layer of security to your account
-                      </p>
-                      <button className="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
-                        Enable 2FA
-                      </button>
-                    </div>
-
                     {/* Session Management */}
                     <div className="border border-gray-200 rounded-2xl p-6">
                       <h4 className="text-lg font-semibold text-gray-800 mb-4">
