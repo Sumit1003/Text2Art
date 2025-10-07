@@ -26,7 +26,7 @@ const AppContextProvider = (props) => {
     import.meta.env.VITE_API_BASE_URL ||
     (import.meta.env.MODE === "production"
       ? "https://text2art.onrender.com"
-      : "http://localhost:5000");
+      : "https://text2art.onrender.com");
 
   console.log("✅ Backend URL in use:", backendUrl);
 

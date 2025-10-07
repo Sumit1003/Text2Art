@@ -76,7 +76,7 @@ const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
     'https://text2art.onrender.com',
-    'https://imagify-ai-app.vercel.app',
+    'https://text2art1.onrender.com',
     // Add your production domains here
 ];
 
@@ -254,7 +254,7 @@ if (process.env.NODE_ENV === 'production') {
     app.get('/', (req, res) => {
         res.json({
             message: '🛠️ Imagify AI Development Server',
-            documentation: 'https://github.com/your-username/imagify-ai',
+            documentation: 'https://github.com/sumit1003/Text2Art',
             endpoints: {
                 health: '/health',
                 status: '/api/status',
