@@ -11,8 +11,21 @@ const AppContextProvider = (props) => {
   const [credit, setCredit] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // ✅ FIXED: Proper backend URL setup with fallback
+  const backendUrl =
+    import.meta.env.VITE_BACKEND_URL ||
+    import.meta.env.VITE_API_BASE_URL ||
+    (import.meta.env.MODE === "production"
+      ? "https://text2art.onrender.com"
+      : "http://localhost:5000");
+
+  console.log("✅ Backend URL in use:", backendUrl);
+
   const isAuthenticated = !!token;
+
+  // ✅ Set axios defaults (optional but recommended)
+  axios.defaults.baseURL = backendUrl;
+  axios.defaults.headers.common["Content-Type"] = "application/json";
 
   // Enhanced error handler
   const handleApiError = useCallback(
@@ -20,7 +33,6 @@ const AppContextProvider = (props) => {
       console.error("API Error:", error);
 
       if (error.response) {
-        // Server responded with error status
         const message =
           error.response.data?.message || error.response.statusText;
         const status = error.response.status;
@@ -40,11 +52,9 @@ const AppContextProvider = (props) => {
 
         toast.error(message || defaultMessage);
       } else if (error.request) {
-        // Request made but no response received
         console.log("No response received:", error.request);
         toast.error("Network error. Please check your connection.");
       } else {
-        // Something else happened
         console.log("Error:", error.message);
         toast.error(error.message || defaultMessage);
       }
@@ -56,10 +66,9 @@ const AppContextProvider = (props) => {
     try {
       console.log("Loading credits with token:", token ? "Exists" : "Missing");
 
-      const { data } = await axios.get(backendUrl + "/api/user/credits", {
+      const { data } = await axios.get("/api/user/credits", {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
       });
 
@@ -74,7 +83,7 @@ const AppContextProvider = (props) => {
     } catch (error) {
       handleApiError(error, "Failed to load credits");
     }
-  }, [token, backendUrl, handleApiError]);
+  }, [token, handleApiError]);
 
   const generateImage = useCallback(
     async (prompt) => {
@@ -83,14 +92,13 @@ const AppContextProvider = (props) => {
         console.log("Generating image with prompt:", prompt);
 
         const { data } = await axios.post(
-          backendUrl + "/api/image/generate-image",
+          "/api/image/generate-image",
           { prompt },
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
             },
-            timeout: 120000, // 2 minutes timeout for image generation
+            timeout: 120000,
           }
         );
 
@@ -98,13 +106,12 @@ const AppContextProvider = (props) => {
 
         if (data.success) {
           toast.success("Image generated successfully!");
-          await loadCreditsData(); // Wait for credits to update
+          await loadCreditsData();
           return data.resultImage;
         } else {
           toast.error(data.message);
           if (data.creditBalance === 0) {
-            // Removed navigate since we can't use hook here
-            setShowLogin(true); // Show login modal instead
+            setShowLogin(true);
           }
           return null;
         }
@@ -115,7 +122,7 @@ const AppContextProvider = (props) => {
         setLoading(false);
       }
     },
-    [token, backendUrl, loadCreditsData, handleApiError]
+    [token, loadCreditsData, handleApiError]
   );
 
   const logout = useCallback(() => {
@@ -124,19 +131,16 @@ const AppContextProvider = (props) => {
     setToken("");
     setUser(null);
     setCredit(0);
-    // Removed navigate since we can't use hook here
-    window.location.href = "/"; // Use window.location instead
+    window.location.href = "/";
   }, []);
 
-  // Check token validity on app start
   const checkTokenValidity = useCallback(async () => {
     if (!token) return;
 
     try {
-      const { data } = await axios.get(backendUrl + "/api/user/check-token", {
+      const { data } = await axios.get("/api/user/check-token", {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
       });
 
@@ -148,7 +152,7 @@ const AppContextProvider = (props) => {
       console.log("Token check failed, logging out...");
       logout();
     }
-  }, [token, backendUrl, logout]);
+  }, [token, logout]);
 
   useEffect(() => {
     if (token) {
