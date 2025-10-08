@@ -122,7 +122,7 @@ const UploadImage = () => {
       color: "from-pink-500 to-rose-500",
       bgColor: "bg-gradient-to-r from-pink-500 to-rose-500",
       requiresUpload: false,
-      credits: 5,
+      credits: 1,
       action: () => navigate("/result"),
       popular: true,
     },
@@ -134,7 +134,7 @@ const UploadImage = () => {
       color: "from-purple-500 to-indigo-500",
       bgColor: "bg-gradient-to-r from-purple-500 to-indigo-500",
       requiresUpload: true,
-      credits: 25,
+      credits: 2,
       action: (imageUrl) =>
         navigate("/process-image", { state: { imageUrl, feature: "enhance" } }),
     },
@@ -146,7 +146,7 @@ const UploadImage = () => {
       color: "from-green-500 to-emerald-500",
       bgColor: "bg-gradient-to-r from-green-500 to-emerald-500",
       requiresUpload: true,
-      credits: 25,
+      credits: 3,
       action: (imageUrl) =>
         navigate("/process-image", {
           state: { imageUrl, feature: "remove-bg" },
@@ -161,7 +161,7 @@ const UploadImage = () => {
       color: "from-blue-500 to-cyan-500",
       bgColor: "bg-gradient-to-r from-blue-500 to-cyan-500",
       requiresUpload: true,
-      credits: 25,
+      credits: 2,
       action: (imageUrl) =>
         navigate("/process-image", { state: { imageUrl, feature: "upscale" } }),
     },
@@ -173,13 +173,13 @@ const UploadImage = () => {
       color: "from-orange-500 to-amber-500",
       bgColor: "bg-gradient-to-r from-orange-500 to-amber-500",
       requiresUpload: true,
-      credits: 25,
+      credits: 1,
       action: (imageUrl) =>
         navigate("/process-image", {
           state: { imageUrl, feature: "optimize" },
         }),
     },
-
+  
   ];
 
   const handleFeatureClick = (feature) => {

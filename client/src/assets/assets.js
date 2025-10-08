@@ -374,7 +374,7 @@ export const contactInfo = {
 export const companyInfo = {
   name: 'Text2Art AI',
   description: 'Transforming ideas into stunning visual art through advanced artificial intelligence.',
-  founded: 2025,
+  founded: 2024,
   mission: 'To make AI-powered image generation accessible to everyone, from individual creators to large enterprises.',
   vision: 'Democratizing creativity through artificial intelligence.',
   values: ['Innovation', 'Accessibility', 'Quality', 'Community']
@@ -406,7 +406,7 @@ export const featureCategories = [
         description: 'Improve quality, colors, and details with AI',
         icon: '⚡',
         color: 'purple',
-        credits: 5
+        credits: 2
       },
       {
         id: 'upscale',
@@ -414,7 +414,7 @@ export const featureCategories = [
         description: 'Increase resolution up to 4x with AI',
         icon: '📈',
         color: 'blue',
-        credits: 25
+        credits: 2
       }
     ]
   },
@@ -428,7 +428,7 @@ export const featureCategories = [
         description: 'AI-powered automatic background removal',
         icon: '✂️',
         color: 'green',
-        credits: 25
+        credits: 3
       },
       {
         id: 'optimize',
@@ -436,8 +436,9 @@ export const featureCategories = [
         description: 'Compress and optimize for web performance',
         icon: '🚀',
         color: 'orange',
-        credits: 25
+        credits: 1
       },
+      
     ]
   }
 ];
