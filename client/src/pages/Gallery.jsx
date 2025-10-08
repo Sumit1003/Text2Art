@@ -9,6 +9,7 @@ const Gallery = () => {
   const { user, token, backendUrl, isAuthenticated } = useContext(AppContext);
   const [generations, setGenerations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ setIsOpen] = useState(false);
   const [filter, setFilter] = useState("all");
   const [selectedImage, setSelectedImage] = useState(null);
   const [viewMode, setViewMode] = useState("grid"); // grid or list
@@ -62,6 +63,11 @@ const Gallery = () => {
 
     fetchGenerations();
   }, [isAuthenticated, token, backendUrl]);
+
+  // Close mobile menu
+  const closeMobileMenu = () => {
+    setIsOpen(false);
+  };
 
   // If no data, show sample placeholders
   const sampleGenerations = [
@@ -122,7 +128,7 @@ const Gallery = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `imagify-${prompt.slice(0, 20)}-${Date.now()}.jpg`;
+      link.download = `Text2Art-${prompt.slice(0, 20)}-${Date.now()}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -182,8 +188,7 @@ const Gallery = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-            >
-            </motion.div>
+            ></motion.div>
           )}
         </motion.div>
 
@@ -471,12 +476,7 @@ const Gallery = () => {
               Login to see all your AI-generated and enhanced creations in one
               beautiful gallery
             </p>
-            <button
-              onClick={() => navigate("/result")}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full hover:shadow-lg transition-all"
-            >
-              🚀 Start Creating
-            </button>
+
           </motion.div>
         )}
 

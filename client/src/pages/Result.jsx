@@ -186,7 +186,7 @@ const Result = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `imagify-${Date.now()}.${extension}`;
+        link.download = `Text2Art-${Date.now()}.${extension}`;
         link.click();
         URL.revokeObjectURL(url);
       };
@@ -327,7 +327,7 @@ const Result = () => {
       {isImageLoaded && (
         <div className="flex flex-col items-center w-full max-w-6xl mt-8">
           {/* Quick Action Buttons */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 w-full max-w-2xl">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 w-full max-w-2xl">
             {quickActions.map((action) => (
               <button
                 key={action.id}
@@ -350,7 +350,7 @@ const Result = () => {
                 </div>
               </button>
             ))}
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
           <div className="flex gap-4 flex-wrap justify-center mb-8">

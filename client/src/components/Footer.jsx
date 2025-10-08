@@ -95,7 +95,7 @@ const Footer = () => {
     {
       name: "GitHub",
       icon: assets.github_icon,
-      url: "https://github.com/phoenixdev100/Imagify",
+      url: "https://github.com/phoenixdev100/Text2Art",
       color: "hover:bg-gray-900 hover:border-gray-900",
       description: "Star our repo",
     },
@@ -122,11 +122,8 @@ const Footer = () => {
     },
   ];
 
-  
-
   return (
     <footer className="bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="py-12 lg:py-16">
@@ -137,13 +134,13 @@ const Footer = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
                   <img
                     src={assets.logo_icon}
-                    alt="Imagify"
+                    alt="Text2Art"
                     className="w-6 h-6 filter brightness-0 invert"
                   />
                 </div>
                 <div>
                   <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Imagify
+                    Text2Art
                   </span>
                   <p className="text-xs text-gray-500 -mt-1">
                     AI-Powered Creativity
@@ -394,10 +391,10 @@ const Footer = () => {
                         />
                       </svg>
                       <a
-                        href="mailto:support@imagify.com"
+                        href="mailto:support@Text2Art.com"
                         className="hover:text-blue-600 transition-colors"
                       >
-                        support@imagify.com
+                        support@Text2Art.com
                       </a>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -433,7 +430,7 @@ const Footer = () => {
         <div className="py-6 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-6 text-sm text-gray-600">
-              <span>© {currentYear} Imagify AI. All rights reserved.</span>
+              <span>© {currentYear} Text2Art AI. All rights reserved.</span>
               <div className="hidden md:flex items-center gap-4">
                 <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                 <span>Made with ❤️ for creators</span>

@@ -122,7 +122,7 @@ const UploadImage = () => {
       color: "from-pink-500 to-rose-500",
       bgColor: "bg-gradient-to-r from-pink-500 to-rose-500",
       requiresUpload: false,
-      credits: 1,
+      credits: 5,
       action: () => navigate("/result"),
       popular: true,
     },
@@ -134,7 +134,7 @@ const UploadImage = () => {
       color: "from-purple-500 to-indigo-500",
       bgColor: "bg-gradient-to-r from-purple-500 to-indigo-500",
       requiresUpload: true,
-      credits: 2,
+      credits: 25,
       action: (imageUrl) =>
         navigate("/process-image", { state: { imageUrl, feature: "enhance" } }),
     },
@@ -146,7 +146,7 @@ const UploadImage = () => {
       color: "from-green-500 to-emerald-500",
       bgColor: "bg-gradient-to-r from-green-500 to-emerald-500",
       requiresUpload: true,
-      credits: 3,
+      credits: 25,
       action: (imageUrl) =>
         navigate("/process-image", {
           state: { imageUrl, feature: "remove-bg" },
@@ -161,7 +161,7 @@ const UploadImage = () => {
       color: "from-blue-500 to-cyan-500",
       bgColor: "bg-gradient-to-r from-blue-500 to-cyan-500",
       requiresUpload: true,
-      credits: 2,
+      credits: 25,
       action: (imageUrl) =>
         navigate("/process-image", { state: { imageUrl, feature: "upscale" } }),
     },
@@ -173,27 +173,13 @@ const UploadImage = () => {
       color: "from-orange-500 to-amber-500",
       bgColor: "bg-gradient-to-r from-orange-500 to-amber-500",
       requiresUpload: true,
-      credits: 1,
+      credits: 25,
       action: (imageUrl) =>
         navigate("/process-image", {
           state: { imageUrl, feature: "optimize" },
         }),
     },
-    {
-      id: "style-transfer",
-      title: "🎭 Style Transfer",
-      description: "Apply artistic styles to your images",
-      icon: "🖼️",
-      color: "from-violet-500 to-purple-500",
-      bgColor: "bg-gradient-to-r from-violet-500 to-purple-500",
-      requiresUpload: true,
-      credits: 4,
-      action: (imageUrl) =>
-        navigate("/process-image", {
-          state: { imageUrl, feature: "style-transfer" },
-        }),
-      premium: true,
-    },
+
   ];
 
   const handleFeatureClick = (feature) => {
@@ -272,6 +258,46 @@ const UploadImage = () => {
             </motion.div>
           )}
         </motion.div>
+
+        {/* Quick Stats */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-200"
+        >
+          <h4 className="font-semibold text-blue-800 mb-3 text-lg flex items-center gap-">
+            <span>💡</span>
+            How it works:
+          </h4>
+          <div className="grid grid-cols-4 gap-4 text-sm text-blue-700">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                1
+              </div>
+              <span>Upload your image</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                2
+              </div>
+              <span>Choose AI feature</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                3
+              </div>
+              <span>Process with AI</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                4
+              </div>
+              <span>Download result</span>
+            </div>
+          </div>
+        </motion.div>
+
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* Upload Section */}
@@ -589,62 +615,7 @@ const UploadImage = () => {
                   );
                 })}
               </div>
-
-              {/* Quick Stats */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-200"
-              >
-                <h4 className="font-semibold text-blue-800 mb-3 text-lg flex items-center gap-2">
-                  <span>💡</span>
-                  How it works:
-                </h4>
-                <div className="grid grid-cols-2 gap-4 text-sm text-blue-700">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      1
-                    </div>
-                    <span>Upload your image</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      2
-                    </div>
-                    <span>Choose AI feature</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      3
-                    </div>
-                    <span>Process with AI</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      4
-                    </div>
-                    <span>Download result</span>
-                  </div>
-                </div>
-              </motion.div>
             </div>
-
-            {/* Support Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 }}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl p-6 text-white text-center"
-            >
-              <h3 className="font-bold text-lg mb-2">Need Help?</h3>
-              <p className="text-purple-100 text-sm mb-3">
-                Our AI experts are here to assist you
-              </p>
-              <button className="bg-white text-purple-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors">
-                Contact Support
-              </button>
-            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -189,8 +189,7 @@ const Features = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-          >
-          </motion.div>
+          ></motion.div>
         </motion.div>
 
         {/* Stats */}
@@ -389,7 +388,7 @@ const Features = () => {
             Ready to Transform Your Creativity?
           </h2>
           <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of creators who are already using Imagify to
+            Join thousands of creators who are already using Text2Art to
             generate, enhance, and transform their images with AI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -405,65 +404,6 @@ const Features = () => {
             >
               📤 Try Image Enhancement
             </Link>
-          </div>
-        </motion.div>
-
-        {/* FAQ Section */}
-        <motion.div
-          className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-        >
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
-            ❓ Frequently Asked Questions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {[
-              {
-                question: "What types of images can I enhance?",
-                answer:
-                  "You can enhance portraits, landscapes, product photos, and more. Our AI works best with clear, well-lit images.",
-              },
-              {
-                question: "How accurate is background removal?",
-                answer:
-                  "Our AI achieves 95%+ accuracy for most images. Complex backgrounds with fine details may require manual touch-ups.",
-              },
-              {
-                question: "Can I use enhanced images commercially?",
-                answer:
-                  "Yes! All images you enhance or generate are yours to use for personal and commercial projects.",
-              },
-              {
-                question: "What's the maximum image size for upload?",
-                answer:
-                  "We support images up to 10MB. For best results with enhancement, use high-quality source images.",
-              },
-              {
-                question: "How long does image processing take?",
-                answer:
-                  "Most enhancements take 15-30 seconds. Background removal is typically faster at 5-10 seconds.",
-              },
-              {
-                question: "Do you support batch processing?",
-                answer:
-                  "Yes! Premium users can process multiple images at once. This feature is coming soon for all users.",
-              },
-            ].map((faq, index) => (
-              <motion.div
-                key={index}
-                className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 1.1 + index * 0.1 }}
-              >
-                <h3 className="font-semibold text-gray-800 mb-3 text-lg">
-                  {faq.question}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
-              </motion.div>
-            ))}
           </div>
         </motion.div>
       </div>

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [state, setState] = useState("Login");
+  const [isOpen, setIsOpen] = useState(false);
   const { setShowLogin, backendUrl, setToken, setUser } =
     useContext(AppContext);
   const navigate = useNavigate();
@@ -20,6 +21,11 @@ const Login = () => {
     dateOfBirth: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  // Close mobile menu
+  const closeMobileMenu = () => {
+    setIsOpen(false);
+  };
 
   // Password reset states
   const [resetStep, setResetStep] = useState(0); // 0: initial, 1: verify, 2: reset password
@@ -237,7 +243,7 @@ const Login = () => {
             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <img
                 src={assets.logo_icon}
-                alt="Imagify"
+                alt="Text2Art"
                 className="w-8 h-8 filter brightness-0 invert"
               />
             </div>
@@ -625,7 +631,10 @@ const Login = () => {
 
         {/* Close Button */}
         <button
-          onClick={() => setShowLogin(false)}
+          onClick={() => {
+            setShowLogin(false);
+            closeMobileMenu();
+          }}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
         >
           <img src={assets.cross_icon} alt="Close" className="w-4 h-4" />

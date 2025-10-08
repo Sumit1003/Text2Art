@@ -151,120 +151,23 @@ function Description() {
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Images Section */}
-          <motion.div className="relative" variants={textVariants}>
-            <div className="grid grid-cols-2 gap-4 relative">
-              {sampleImages.map((image, index) => (
-                <motion.div
-                  key={index}
-                  className={`relative group cursor-pointer ${
-                    index === 1 ? "col-span-1" : "2"
-                  }`}
-                  variants={imageVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  whileHover="hover"
-                  viewport={{ once: true }}
-                  onHoverStart={() => setHoveredImage(index)}
-                  onHoverEnd={() => setHoveredImage(null)}
-                  custom={index}
-                >
-                  <motion.img
-                    src={image}
-                    alt={`AI Generated Sample ${index + 1}`}
-                    className={`w-full h-auto rounded-2xl shadow-2xl border-4 border-white transition-all duration-300 ${
-                      index === 1
-                        ? "max-h-96 object-cover"
-                        : "max-h-64 object-cover"
-                    } ${
-                      hoveredImage === index
-                        ? "shadow-purple-500/30"
-                        : "shadow-gray-400/20"
-                    }`}
-                  />
-
-                  {/* Hover overlay */}
-                  <AnimatePresence>
-                    {hoveredImage === index && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-2xl flex items-end justify-center p-4"
-                      >
-                        <motion.span
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          className="text-white font-semibold text-sm"
-                        >
-                          AI Generated Art
-                        </motion.span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Floating elements */}
-                  <motion.div
-                    className={`absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-lg ${
-                      index === 1 ? "animate-bounce" : ""
-                    }`}
-                    animate={{
-                      y: [0, -10, 0],
-                      rotate: [0, 180, 360],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      delay: index * 0.5,
-                    }}
-                  />
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Floating badge */}
-            <motion.div
-              className="absolute -bottom-4 -left-4 bg-white rounded-2xl px-4 py-2 shadow-xl border border-gray-200"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-2">
-                <div className="flex space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <span key={star} className="text-yellow-400 text-sm">
-                      ⭐
-                    </span>
-                  ))}
+          <div className="grid grid-cols-3 gap-4">
+            {sampleImages.map((image, index) => (
+              <div key={index} className="relative group">
+                <img
+                  src={image}
+                  alt={`Sample ${index + 1}`}
+                  className="w-full h-auto rounded-lg object-cover transition-all duration-300 group-hover:shadow-lg"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-end justify-center opacity-0 group-hover:opacity-100">
+                  <span className="text-white text-sm mb-2">AI Art</span>
                 </div>
-                <span className="text-gray-700 font-semibold text-sm">
-                  5.0 Rating
-                </span>
               </div>
-            </motion.div>
-          </motion.div>
+            ))}
+          </div>
 
           {/* Text Content */}
           <motion.div className="space-y-8" variants={textVariants}>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <motion.h2
-                className="text-3xl md:text-4xl font-bold leading-tight bg-gradient-to-r from-gray-900 to-purple-700 bg-clip-text text-transparent mb-6"
-                whileHover={{
-                  scale: 1.02,
-                  transition: { duration: 0.3 },
-                }}
-              >
-                Revolutionize Your Creativity with AI-Powered Image Generation
-              </motion.h2>
-
-              
-            </motion.div>
-
             {/* Features Grid */}
             <motion.div
               className="grid grid-cols-2 gap-4 mt-8"
@@ -281,7 +184,7 @@ function Description() {
                   whileHover={{
                     y: -5,
                     scale: 1.02,
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    backgroundColor: "rgba(179, 20, 20, 0.9)",
                   }}
                 >
                   <div className="flex items-center gap-3">
@@ -303,27 +206,6 @@ function Description() {
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
-
-            {/* CTA Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl p-6 text-center text-white mt-8"
-            >
-              <h3 className="text-xl font-bold mb-2">Ready to Create Magic?</h3>
-              <p className="text-purple-100 mb-4">
-                Join thousands of creators already using our AI
-              </p>
-              <motion.button
-                className="bg-white text-purple-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors shadow-lg"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Start Creating Free 🚀
-              </motion.button>
             </motion.div>
           </motion.div>
         </div>

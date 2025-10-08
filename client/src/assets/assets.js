@@ -7,6 +7,7 @@ import star_icon from './star_icon.svg'
 import rating_star from './rating_star.svg'
 import sample_img_1 from './sample_img_1.png'
 import sample_img_2 from './sample_img_2.png'
+import sample_img_3 from './sample_img_3.jpeg'
 import profile_img_1 from './profile_img_1.png'
 import profile_img_2 from './profile_img_2.png'
 import step_icon_1 from './step_icon_1.svg'
@@ -45,6 +46,7 @@ export const assets = {
   // Sample Images (only existing ones)
   sample_img_1,
   sample_img_2,
+  sample_img_3,
 
   // Profile Images
   profile_img_1,
@@ -65,6 +67,7 @@ export const assets = {
 export const sampleImages = [
   sample_img_1,
   sample_img_2,
+  sample_img_3,
   sample_img_1, // Reuse as fallback
   sample_img_2, // Reuse as fallback
 ];
@@ -112,7 +115,7 @@ export const testimonialsData = [
     role: 'Digital Artist',
     company: 'Creative Studio',
     stars: 5,
-    text: "Imagify has revolutionized my creative process. The AI understands artistic nuances and produces stunning results that align perfectly with my vision. A game-changer for digital artists!",
+    text: "Text2Art has revolutionized my creative process. The AI understands artistic nuances and produces stunning results that align perfectly with my vision. A game-changer for digital artists!",
     featured: true,
     social: '@sarahchen_art'
   },
@@ -122,7 +125,7 @@ export const testimonialsData = [
     role: 'Marketing Director',
     company: 'TechCorp Inc',
     stars: 5,
-    text: "We use Imagify daily for our marketing campaigns. The speed and quality of generated images are exceptional, saving us countless hours on content creation. Highly recommended!",
+    text: "We use Text2Art daily for our marketing campaigns. The speed and quality of generated images are exceptional, saving us countless hours on content creation. Highly recommended!",
     featured: false,
     social: '@marcus_rdz'
   },
@@ -132,7 +135,7 @@ export const testimonialsData = [
     role: 'UI/UX Designer',
     company: 'DesignHub',
     stars: 5,
-    text: "The versatility of Imagify is incredible. From mockups to concept art, it helps me visualize designs quickly. The intuitive interface makes it a joy to use in my design workflow.",
+    text: "The versatility of Text2Art is incredible. From mockups to concept art, it helps me visualize designs quickly. The intuitive interface makes it a joy to use in my design workflow.",
     featured: true,
     social: '@emilyp_designs'
   },
@@ -350,28 +353,28 @@ export const pricingFAQ = [
 
 // Social media links
 export const socialLinks = {
-  facebook: 'https://facebook.com/imagify',
-  instagram: 'https://instagram.com/imagify',
-  twitter: 'https://twitter.com/imagify',
-  github: 'https://github.com/imagify',
-  linkedin: 'https://linkedin.com/company/imagify'
+  facebook: 'https://facebook.com/Text2Art',
+  instagram: 'https://instagram.com/Text2Art',
+  twitter: 'https://twitter.com/Text2Art',
+  github: 'https://github.com/Text2Art',
+  linkedin: 'https://linkedin.com/company/Text2Art'
 };
 
 // Contact information
 export const contactInfo = {
-  email: 'support@imagify.com',
+  email: 'support@Text2Art.com',
   phone: '+1 (555) 123-4567',
   address: '123 AI Street, Tech City, TC 12345',
   businessHours: 'Mon-Fri: 9AM-6PM EST',
-  supportEmail: 'help@imagify.com',
-  salesEmail: 'sales@imagify.com'
+  supportEmail: 'help@Text2Art.com',
+  salesEmail: 'sales@Text2Art.com'
 };
 
 // Company information
 export const companyInfo = {
-  name: 'Imagify AI',
+  name: 'Text2Art AI',
   description: 'Transforming ideas into stunning visual art through advanced artificial intelligence.',
-  founded: 2024,
+  founded: 2025,
   mission: 'To make AI-powered image generation accessible to everyone, from individual creators to large enterprises.',
   vision: 'Democratizing creativity through artificial intelligence.',
   values: ['Innovation', 'Accessibility', 'Quality', 'Community']
@@ -403,7 +406,7 @@ export const featureCategories = [
         description: 'Improve quality, colors, and details with AI',
         icon: '⚡',
         color: 'purple',
-        credits: 2
+        credits: 5
       },
       {
         id: 'upscale',
@@ -411,7 +414,7 @@ export const featureCategories = [
         description: 'Increase resolution up to 4x with AI',
         icon: '📈',
         color: 'blue',
-        credits: 2
+        credits: 25
       }
     ]
   },
@@ -425,7 +428,7 @@ export const featureCategories = [
         description: 'AI-powered automatic background removal',
         icon: '✂️',
         color: 'green',
-        credits: 3
+        credits: 25
       },
       {
         id: 'optimize',
@@ -433,16 +436,8 @@ export const featureCategories = [
         description: 'Compress and optimize for web performance',
         icon: '🚀',
         color: 'orange',
-        credits: 1
+        credits: 25
       },
-      {
-        id: 'style-transfer',
-        title: '🎭 Style Transfer',
-        description: 'Apply artistic styles to your images',
-        icon: '🖼️',
-        color: 'violet',
-        credits: 4
-      }
     ]
   }
 ];
