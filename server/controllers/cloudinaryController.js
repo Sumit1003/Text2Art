@@ -13,7 +13,7 @@ export const uploadImage = async (req, res) => {
         }
 
         const result = await cloudinary.uploader.upload(image, {
-            folder: 'imagify',
+            folder: 'Text2Art',
             quality: 'auto:good',
             fetch_format: 'auto'
         });
@@ -46,7 +46,7 @@ export const uploadUserImage = async (req, res) => {
         }
 
         const result = await cloudinary.uploader.upload(imageBase64, {
-            folder: 'imagify/user-uploads',
+            folder: 'Text2Art/user-uploads',
             quality: 'auto:good',
             fetch_format: 'auto'
         });
@@ -79,7 +79,7 @@ export const removeBackground = async (req, res) => {
         }
 
         const result = await cloudinary.uploader.upload(imageUrl, {
-            folder: 'imagify/background-removed',
+            folder: 'Text2Art/background-removed',
             effect: 'background_removal',
             quality: 'auto:good'
         });
@@ -112,7 +112,7 @@ export const upscaleImage = async (req, res) => {
         }
 
         const result = await cloudinary.uploader.upload(imageUrl, {
-            folder: 'imagify/upscaled',
+            folder: 'Text2Art/upscaled',
             transformation: [
                 {
                     width: 2000,
@@ -150,7 +150,7 @@ export const enhanceImage = async (req, res) => {
         }
 
         const result = await cloudinary.uploader.upload(imageUrl, {
-            folder: 'imagify/enhanced',
+            folder: 'Text2Art/enhanced',
             transformation: [
                 {
                     effect: 'improve:outdoor',
@@ -206,7 +206,7 @@ export const optimizeImage = async (req, res) => {
         });
 
         const result = await cloudinary.uploader.upload(imageUrl, {
-            folder: 'imagify/optimized',
+            folder: 'Text2Art/optimized',
             transformation
         });
 

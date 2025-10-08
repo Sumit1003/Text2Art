@@ -182,7 +182,7 @@ app.use('/api/cloudinary', cloudinaryRoutes);
 // API Health check with detailed status
 app.get('/health', async (req, res) => {
     const healthCheck = {
-        message: '🚀 Imagify AI API is running smoothly',
+        message: '🚀 Text2Art AI API is running smoothly',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         environment: process.env.NODE_ENV || 'development',
@@ -219,7 +219,7 @@ app.get('/api/status', (req, res) => {
     res.json({
         status: 'operational',
         version: '1.0.0',
-        service: 'Imagify AI Backend',
+        service: 'Text2Art AI Backend',
         timestamp: new Date().toISOString(),
         endpoints: {
             user: '/api/user',
@@ -291,7 +291,7 @@ if (process.env.NODE_ENV === 'production') {
         // Fallback route for root path
         app.get('/', (req, res) => {
             res.json({
-                message: '🚀 Imagify AI Backend Server',
+                message: '🚀 Text2Art AI Backend Server',
                 status: 'API is running',
                 frontend: 'Frontend build not found - running in API mode',
                 endpoints: {
@@ -307,7 +307,7 @@ if (process.env.NODE_ENV === 'production') {
     // Development route for testing
     app.get('/', (req, res) => {
         res.json({
-            message: '🛠️ Imagify AI Development Server',
+            message: '🛠️ Text2Art AI Development Server',
             documentation: 'https://github.com/sumit1003/Text2Art',
             endpoints: {
                 health: '/health',
@@ -431,7 +431,7 @@ process.on('uncaughtException', (error) => {
 // Start server
 const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`
-    🚀 Imagify AI Server Started!
+    🚀 Text2Art AI Server Started!
     📍 Port: ${PORT}
     🌍 Environment: ${process.env.NODE_ENV || 'development'}
     🗄️  Database: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Connining...'}

@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "type": "module",
-  "description": "Imagify AI Backend Server",
+  "description": "Text2Art AI Backend Server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
