@@ -284,23 +284,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 </div>
 
-<div  align="center">
-
 ### 📞 Support
 - If you have any questions or need help with the project:
 - Create an Issue: GitHub Issues
 - Email: [Your Email]
 - Documentation: Check the Wiki for detailed guides
 
-</div>
 
 <div align="center">
 
 ### Made with ❤️ by [SUMIT](https://github.com/Sumit1003)
-
 [![GitHub Follow](https://img.shields.io/github/followers/Sumit1003?label=Follow%20Me&style=social)](https://github.com/Sumit1003)
-
 > Transforming imagination into reality, one pixel at a time.
-
 
 </div>
