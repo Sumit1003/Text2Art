@@ -392,7 +392,7 @@ export const featureCategories = [
         description: 'Create new images from text prompts',
         icon: '🪄',
         color: 'pink',
-        credits: 1
+        credits: 5
       }
     ]
   },

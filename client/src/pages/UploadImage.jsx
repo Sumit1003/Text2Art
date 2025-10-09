@@ -122,7 +122,7 @@ const UploadImage = () => {
       color: "from-pink-500 to-rose-500",
       bgColor: "bg-gradient-to-r from-pink-500 to-rose-500",
       requiresUpload: false,
-      credits: 1,
+      credits: 5,
       action: () => navigate("/result"),
       popular: true,
     },
