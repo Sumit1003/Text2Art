@@ -284,21 +284,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 </div>
 
-## 🙏 Acknowledgment
-
-<div align="center">
-
-| Resource                                         | Description                 |
-| ------------------------------------------------ | --------------------------- |
-| [Heroicons](https://heroicons.com/)              | Beautiful icons             |
-| [TailwindCSS](https://tailwindcss.com/)          | Utility-first CSS framework |
-| [React Community](https://reactjs.org/community) | Amazing React ecosystem     |
-
-</div>
-
----
-
-<div  align="center>
+<div  align="center">
 
 ### 📞 Support
 - If you have any questions or need help with the project:
@@ -310,9 +296,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-### Made with ❤️ by [SUMIT] & [ sumit1003 ]
+### Made with ❤️ by [SUMIT](https://github.com/Sumit1003)
 
-[![GitHub Follow](https://github.com/Sumit1003)]
-Transforming imagination into reality, one pixel at a time.
+[![GitHub Follow](https://img.shields.io/github/followers/Sumit1003?label=Follow%20Me&style=social)](https://github.com/Sumit1003)
+
+> Transforming imagination into reality, one pixel at a time.
+
 
 </div>
